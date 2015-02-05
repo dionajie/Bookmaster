@@ -27,7 +27,7 @@ public class DetailActivity extends ActionBarActivity {
         // Tell the activity which XML layout is right
         setContentView(R.layout.activity_detail);
 
-        // Enable the "Up" button for more navigation options
+        // Enable the "Up" button for more navigation options : tombom < atas kiri
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Access the imageview from XML
@@ -36,7 +36,7 @@ public class DetailActivity extends ActionBarActivity {
         // 13. unpack the coverID from its trip inside your Intent
         String coverID = this.getIntent().getExtras().getString("coverID");
 
-        // See if there is a valid coverID
+        // See if there is a valid coverID = bila punya cover
         if (coverID.length() > 0) {
 
             // Use the ID to construct an image URL
@@ -47,13 +47,13 @@ public class DetailActivity extends ActionBarActivity {
         }
     }
 
+    // share
     private void setShareIntent() {
 
         // create an Intent with the contents of the TextView
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT,
-                "Book Recommendation!");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT,"Book Recommendation!");
         shareIntent.putExtra(Intent.EXTRA_TEXT, mImageURL);
 
         // Make sure the provider knows

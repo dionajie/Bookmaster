@@ -75,7 +75,7 @@ public class JSONAdapter extends BaseAdapter {
         // Get the current book's data in JSON form
         JSONObject jsonObject = (JSONObject) getItem(position);
 
-        // See if there is a cover ID in the Object
+        // Bila buku mempunya thumbnails
         if (jsonObject.has("cover_i")) {
 
             // If so, grab the Cover ID out from the object

@@ -14,13 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dionajie.root.test1.Adapter.JSONAdapter;
+import com.dionajie.root.test1.Model.BukuModel;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -71,6 +72,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         mJSONAdapter = new JSONAdapter(this, getLayoutInflater());
         mainListView.setAdapter(mJSONAdapter);
 
+        //Dialog load file buku
         mDialog = new ProgressDialog(this);
         mDialog.setMessage("Searching for Book");
         mDialog.setCancelable(false);
@@ -99,8 +101,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         // Have the client get a JSONArray of data
         // and define how to respond
-        client.get(QUERY_URL + urlString,
-                new JsonHttpResponseHandler() {
+        client.get(QUERY_URL + urlString,new JsonHttpResponseHandler() {
 
                     @Override
                     public void onSuccess(JSONObject jsonObject) {
@@ -121,7 +122,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
                         // Log error message
                         // to help solve any problems
-                        Log.e("omg android", statusCode + " " + throwable.getMessage());
+                        Log.e("Bookmaster General", statusCode + " " + throwable.getMessage());
                     }
                 });
     }
@@ -221,19 +222,34 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         // 12. Now that the user's chosen a book, grab the cover data
+        /*
+            JSONArray : [....] is an array e.g. [ "android" , "httpclient" , "internet" ]
+            JSONObject : {….} is an object e.g. { tags:[...] , categories:[...] , url:”…” , title:”…” }
+            JSONObject can contain JSONArray
+            JSONArray can contain JSONObject
+         */
+
+        BukuModel mBook = new BukuModel();
+
         JSONObject jsonObject = (JSONObject) mJSONAdapter.getItem(position);
-        String coverID = jsonObject.optString("cover_i","");
+        mBook.setCoverID(jsonObject.optString("cover_i",""));
+
+        mBook.setBookTitle(jsonObject.optString("title"));
+        // Karena kemunkinan author ada lebih dari 1, maka diambil author yang pertama
+        mBook.setAuthorName(jsonObject.optJSONArray("author_name").optString(0));
 
         // create an Intent to take you over to a new DetailActivity
                 Intent detailIntent = new Intent(this, DetailActivity.class);
 
         // pack away the data about the cover
         // into your Intent before you head out
-                detailIntent.putExtra("coverID", coverID);
+                detailIntent.putExtra("coverID", mBook.getCoverID());
+                detailIntent.putExtra("booktitle", mBook.getBookTitle());
+                detailIntent.putExtra("authorname", mBook.getAuthorName());
 
         // TODO: add any other data you'd like as Extras
 
         // start the next Activity using your prepared Intent
                 startActivity(detailIntent);
-            }
+    }
 }

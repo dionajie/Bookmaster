@@ -8,8 +8,11 @@ import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by root on 05/02/15.
@@ -32,10 +35,17 @@ public class DetailActivity extends ActionBarActivity {
 
         // Access the imageview from XML
         ImageView imageView = (ImageView) findViewById(R.id.img_cover);
+        TextView tvTitle= (TextView) findViewById(R.id.text_title);
+        TextView tvAuthor= (TextView) findViewById(R.id.text_author);
+
 
         // 13. unpack the coverID from its trip inside your Intent
         String coverID = this.getIntent().getExtras().getString("coverID");
+        String authorname = this.getIntent().getExtras().getString("authorname");
+        String booktitle = this.getIntent().getExtras().getString("booktitle");
 
+        tvTitle.setText("Judul Buku : " +booktitle+ "");
+        tvAuthor.setText("Nama Pengarang : " +authorname+ "");
         // See if there is a valid coverID = bila punya cover
         if (coverID.length() > 0) {
 

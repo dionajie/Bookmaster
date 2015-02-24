@@ -1,4 +1,4 @@
-package com.dionajie.root.test1;
+package com.dionajie.root.test1.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dionajie.root.test1.Model.BukuModel;
+import com.dionajie.root.test1.R;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -16,12 +18,14 @@ import org.json.JSONObject;
 /**
  * Created by root on 04/02/15.
  */
+
 public class JSONAdapter extends BaseAdapter {
     private static final String IMAGE_URL_BASE = "http://covers.openlibrary.org/b/id/";
 
     Context mContext;
     LayoutInflater mInflater;
     JSONArray mJsonArray;
+    BukuModel mBook = new BukuModel();
 
     public JSONAdapter(Context context, LayoutInflater inflater) {
         mContext = context;
@@ -79,35 +83,32 @@ public class JSONAdapter extends BaseAdapter {
         if (jsonObject.has("cover_i")) {
 
             // If so, grab the Cover ID out from the object
-            String imageID = jsonObject.optString("cover_i");
+            mBook.setCoverID(jsonObject.optString("cover_i"));
 
             // Construct the image URL (specific to API)
-            String imageURL = IMAGE_URL_BASE + imageID + "-S.jpg";
+            mBook.setImageURL(IMAGE_URL_BASE + mBook.getCoverID() + "-S.jpg");
 
             // Use Picasso to load the image
             // Temporarily have a placeholder in case it's slow to load
-            Picasso.with(mContext).load(imageURL).placeholder(R.drawable.ic_books).into(holder.thumbnailImageView);
+            Picasso.with(mContext).load(mBook.getImageURL()).placeholder(R.drawable.ic_books).into(holder.thumbnailImageView);
         } else {
 
             // If there is no cover ID in the object, use a placeholder
             holder.thumbnailImageView.setImageResource(R.drawable.ic_books);
         }
 
-        // Grab the title and author from the JSON
-        String bookTitle = "";
-        String authorName = "";
-
         if (jsonObject.has("title")) {
-            bookTitle = jsonObject.optString("title");
+            mBook.setBookTitle(jsonObject.optString("title"));
         }
 
         if (jsonObject.has("author_name")) {
-            authorName = jsonObject.optJSONArray("author_name").optString(0);
+            mBook.setAuthorName(jsonObject.optJSONArray("author_name").optString(0));
         }
 
+
         // Send these Strings to the TextViews for display
-        holder.titleTextView.setText(bookTitle);
-        holder.authorTextView.setText(authorName);
+        holder.titleTextView.setText(mBook.getBookTitle());
+        holder.authorTextView.setText(mBook.getAuthorName());
 
         return convertView;
     }
